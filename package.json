@@ -1,0 +1,17 @@
+{
+  "name": "democracia-liquida",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sistema de Democracia Líquida de alto rendimiento (0.1%)",
+  "workspaces": [
+    "03-apps/*",
+    "04-packages/*"
+  ],
+  "scripts": {
+    "test": "npm run test --workspaces"
+  },
+  "devDependencies": {
+    "@democracia/core-graph": "^1.0.0",
+    "vitest": "^5.0.1"
+  }
+}

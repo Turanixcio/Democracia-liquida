@@ -1,0 +1,10 @@
+# Dependencias descargadas
+node_modules/
+
+# Archivos de compilación o build
+dist/
+build/
+
+# Logs de error y del sistema
+*.log
+.DS_Store

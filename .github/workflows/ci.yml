@@ -1,0 +1,41 @@
+#Nombre de la pipeline
+name: CI Pipeline
+
+#Define cuándo debe ejecutarse la acción automatizada
+on:
+    #Se activa cuando pusheas codigo a main o develop
+  push:
+    branches: [ main, develop ]
+    #Se activa cuando alguien abre una solicitud de fusionar codigo en main o develop
+  pull_request:
+    branches: [ main, develop ]
+
+#Definimos la lista de tareas que debe ejecutar como test, deploy o lint, en este caso solo test
+jobs:
+  test:
+    #Indica a Github el SO de la maquina virtual que hará la prueba, en este caso ubuntu
+    runs-on: ubuntu-latest
+    #Lista de pasos sequenciales que se ejecutan uno tras otro
+    steps:
+        #Por defecto, la máquina virtual empieza vacía. Esta "Action" oficial descarga tu código dentro de la máquina.
+      - name: Descargar el código del repositorio
+        uses: actions/checkout@v4
+
+        # Instala la versión de Node.js que le especifiques (v20 LTS).
+        # La opción 'cache: npm' guarda los paquetes descargados para que los siguientes pipelines ejecuten en segundos.
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+        # 'npm ci' (Clean Install) es la versión para servidores de 'npm install'.
+        # En lugar de calcular versiones, lee exactamente el archivo 'package-lock.json' para garantizar 
+        # que se instale EXACTAMENTE lo mismo que tienes en tu máquina local sin alterar nada.
+      - name: Instalar dependencias del Monorepo
+        run: npm ci
+
+        # Ejecuta el mismo script que definimos en la raíz: "npm run test --workspaces".
+        # Si Vitest devuelve un error (un test falla), GitHub detiene el paso y marca el pipeline en rojo (FAILED).
+      - name: Ejecutar pruebas unitarias en todos los workspaces
+        run: npm test
